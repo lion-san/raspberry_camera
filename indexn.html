@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <script language="javascript">
+      var wsurl = "ws://" + location.host + "/ws";
+      var ws = new WebSocket(wsurl);
+
+      ws.onopen = function() {
+           ws.send("C:CONTROLLER connected."); 
+      };
+      ws.onmessage = function (evt) {
+           document.getElementById("num1").textContent=evt.data;
+      };
+
+      var wx;
+      var wy;
+      var wz;
+      window.addEventListener("deviceorientation", function(event) {
+        var _wx = Math.round(event.alpha);
+        var _wy = Math.round(event.beta);
+        var _wz = Math.round(event.gamma);
+        if(wx != _wx || wy != _wy || wz != _wz) {
+           ws.send("D:" + _wx + ":" + _wy + ":" + _wz + ":");
+           wx = _wx;
+           wy = _wy;
+           wz = _wz;
+        }
+      }, false);
+
+    </script>
+  </head>
+  <body>
+	<P><SPAN>NO SSL: return_value:</SPAN><SPAN ID="url1"></SPAN><SPAN ID="num1"></SPAN></P>
+  </body>
+</html>
